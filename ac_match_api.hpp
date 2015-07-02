@@ -259,3 +259,48 @@ namespace de
 
 
 
+
+typedef de::match_node<size_t, 0> work_type;
+typedef de::ac_match_api<work_type> work_class;
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	wchar_t * p;
+	work_class opt;
+	std::list<std::pair<size_t, work_type::ret_key_type>> ret;
+
+
+	if ( false == opt.push_init() )
+		return 1;
+
+	p = L"aaaaaaaaaabbd";
+	if ( false == opt.push_pattern(2, p, lstrlenW(p) ))
+		return 1;
+
+
+	p = L"abbb";
+	if ( false == opt.push_pattern(3, p, lstrlenW(p) ))
+		return 1;
+
+	p = L"aabbccd";
+	if ( false == opt.push_pattern(4, p, lstrlenW(p) ))
+		return 1;
+
+
+
+	if ( false == opt.push_end() )
+		return 1;
+
+	//                         L"aaaaaaaaaabbd";
+	//                  L"abbccd";
+	//                                  L"abbccd";
+	//                                             L"aabbccd";
+	p = L"aaabecesfefefeaaabbccdaaaaaaaaaaabbccdaaaaaabbbccd";
+
+	if ( false == opt.search(ret, p, lstrlenW(p)) )
+		return 1;
+
+	return 0;
+}
+
+
